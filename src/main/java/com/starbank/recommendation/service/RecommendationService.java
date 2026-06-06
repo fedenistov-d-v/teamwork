@@ -12,17 +12,13 @@ import java.util.UUID;
 @Service
 public class RecommendationService {
     private final List<RecommendationRuleSet> ruleSets;
-    private final RecommendationsRepository recommendationsRepository;
 
     public RecommendationService(List<RecommendationRuleSet> ruleSets,
                                  RecommendationsRepository recommendationsRepository) {
         this.ruleSets = ruleSets;
-        this.recommendationsRepository = recommendationsRepository;
     }
 
     public List<RecommendationDto> getRecommendationsByIdUsers(UUID user_id) {
-//        boolean hasDebit = recommendationsRepository.getRandomTransactionAmount(user_id);
-//        System.out.println("hasDebit = " + hasDebit);
         return ruleSets.stream()
                 .map(rule -> rule.check(user_id))
                 .filter(Optional::isPresent)

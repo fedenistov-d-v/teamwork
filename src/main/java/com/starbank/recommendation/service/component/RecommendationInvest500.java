@@ -20,7 +20,7 @@ public class RecommendationInvest500 implements RecommendationRuleSet {
 
     private boolean hasDebit = false;
     private boolean hasInvest = false;
-    private int sumSaving = 0;
+    private int sumSavingDeposit = 0;
 
     private final RecommendationsRepository recommendationsRepository;
 
@@ -30,7 +30,10 @@ public class RecommendationInvest500 implements RecommendationRuleSet {
 
     @Override
     public Optional<RecommendationDto> check(UUID user_id) {
-        if (hasDebit && !hasInvest && sumSaving > 1000) {
+        hasDebit = recommendationsRepository.getHasDebit(user_id);
+        hasInvest = recommendationsRepository.getHasInvest(user_id);
+        sumSavingDeposit = recommendationsRepository.getSumSavingDeposit(user_id);
+        if (hasDebit && !hasInvest && sumSavingDeposit > 1000) {
             return Optional.of(recommendation);
         } else return Optional.empty();
     }

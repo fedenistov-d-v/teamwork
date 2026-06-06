@@ -1,6 +1,7 @@
 package com.starbank.recommendation.service.component;
 
 import com.starbank.recommendation.modul.RecommendationDto;
+import com.starbank.recommendation.repository.RecommendationsRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -24,8 +25,23 @@ public class RecommendationSimpleLoan implements RecommendationRuleSet {
                     "недвижимости, автомобиля, образование, лечение и многое другое.\n" +
                     "Не упустите возможность воспользоваться выгодными условиями кредитования от нашей компании!"));
 
+    boolean hasCredit = false;
+    int sumDebitDeposit = 0;
+    int sumDebitWithdrawal = 0;
+
+    private final RecommendationsRepository recommendationsRepository;
+
+    public RecommendationSimpleLoan(RecommendationsRepository recommendationsRepository) {
+        this.recommendationsRepository = recommendationsRepository;
+    }
+
     @Override
     public Optional<RecommendationDto> check(UUID user_id) {
-        return Optional.of(recommendation);
+        hasCredit = recommendationsRepository.getHasCredit(user_id);
+        sumDebitWithdrawal = recommendationsRepository.getSumDebitWithdraw(user_id);
+        sumDebitDeposit = recommendationsRepository.getSumDebitDeposit(user_id);
+        if (!hasCredit && (sumDebitDeposit > sumDebitWithdrawal) && (sumDebitWithdrawal > 100000)) {
+            return Optional.of(recommendation);
+        } else return Optional.empty();
     }
 }

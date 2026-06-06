@@ -1,6 +1,7 @@
 package com.starbank.recommendation.service.component;
 
 import com.starbank.recommendation.modul.RecommendationDto;
+import com.starbank.recommendation.repository.RecommendationsRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -23,8 +24,27 @@ public class RecommendationTopSaving implements RecommendationRuleSet {
                     "только через мобильное приложение или интернет-банкинг.\n" +
                     "Начните использовать «Копилку» уже сегодня и станьте ближе к своим финансовым целям!"));
 
+    boolean hasDebit = false;
+    int sumDebitDeposit = 0;
+    int sumSavingDeposit = 0;
+    int sumDebitWithdraw = 0;
+    boolean balance = false;
+
+    private final RecommendationsRepository recommendationsRepository;
+
+    public RecommendationTopSaving(RecommendationsRepository recommendationsRepository) {
+        this.recommendationsRepository = recommendationsRepository;
+    }
+
     @Override
     public Optional<RecommendationDto> check(UUID user_id) {
-        return Optional.of(recommendation);
+        hasDebit = recommendationsRepository.getHasDebit(user_id);
+        sumDebitDeposit = recommendationsRepository.getSumDebitDeposit(user_id);
+        sumSavingDeposit = recommendationsRepository.getSumSavingDeposit(user_id);
+        sumDebitWithdraw = recommendationsRepository.getSumDebitWithdraw(user_id);
+        balance = sumDebitDeposit > sumDebitWithdraw;
+        if (hasDebit && (sumDebitDeposit >= 50000 || sumSavingDeposit >= 50000) && balance) {
+            return Optional.of(recommendation);
+        } else return Optional.empty();
     }
 }
