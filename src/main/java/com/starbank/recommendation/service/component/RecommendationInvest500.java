@@ -1,7 +1,7 @@
 package com.starbank.recommendation.service.component;
 
 import com.starbank.recommendation.modul.RecommendationDto;
-import com.starbank.recommendation.repository.RecommendationsRepository;
+import com.starbank.recommendation.repository.GeneralQueries;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -18,22 +18,9 @@ public class RecommendationInvest500 implements RecommendationRuleSet {
                     "возможность разнообразить свой портфель, снизить риски и следить за актуальными рыночными " +
                     "тенденциями. Откройте ИИС сегодня и станьте ближе к финансовой независимости!"));
 
-    private boolean hasDebit = false;
-    private boolean hasInvest = false;
-    private int sumSavingDeposit = 0;
-
-    private final RecommendationsRepository recommendationsRepository;
-
-    public RecommendationInvest500(RecommendationsRepository recommendationsRepository) {
-        this.recommendationsRepository = recommendationsRepository;
-    }
-
     @Override
     public Optional<RecommendationDto> check(UUID user_id) {
-        hasDebit = recommendationsRepository.getHasDebit(user_id);
-        hasInvest = recommendationsRepository.getHasInvest(user_id);
-        sumSavingDeposit = recommendationsRepository.getSumSavingDeposit(user_id);
-        if (hasDebit && !hasInvest && sumSavingDeposit > 1000) {
+        if (GeneralQueries.hasDebit && !GeneralQueries.hasInvest && GeneralQueries.sumSavingDeposit > 1000) {
             return Optional.of(recommendation);
         } else return Optional.empty();
     }

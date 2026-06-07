@@ -1,6 +1,6 @@
 package com.starbank.recommendation.controller;
 
-import com.starbank.recommendation.modul.UserRecommendation;
+import com.starbank.recommendation.modul.PatternJson;
 import com.starbank.recommendation.service.RecommendationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +21,9 @@ public class RecommendationController {
     }
 
     @GetMapping("{user_id}")
-    public ResponseEntity<UserRecommendation> getRecommendations(@PathVariable UUID user_id) {
-        UserRecommendation recommendations = new UserRecommendation();
-        recommendations.setUuid(user_id);
-        recommendations.setRecommendations(recommendationService.getRecommendationsByIdUsers(user_id));
-        return ResponseEntity.ok(recommendations);
+    public ResponseEntity<PatternJson> getRecommendations(@PathVariable UUID user_id) {
+        return ResponseEntity.ok(new PatternJson(
+                user_id,
+                recommendationService.getRecommendationsByIdUsers(user_id)));
     }
 }

@@ -16,131 +16,77 @@ public class RecommendationsRepository {
     }
 
     public boolean getHasDebit(UUID user_id) {
-        try {
-            Integer result = jdbcTemplate.queryForObject(
-                    "SELECT t.AMOUNT  \n" +
-                            "FROM TRANSACTIONS t \n" +
-                            "WHERE t.USER_ID = ? \n" +
-                            "AND EXISTS(\n" +
-                            "SELECT 1\n" +
-                            "FROM PRODUCTS p \n" +
-                            "WHERE p.ID = t.PRODUCT_ID \n" +
-                            "AND p.\"TYPE\" = 'DEBIT'\n" +
-                            ")\n" +
-                            "LIMIT 1",
-                    Integer.class,
-                    user_id);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                "SELECT EXISTS( " +
+                        "SELECT 1 " +
+                        "FROM TRANSACTIONS t " +
+                        "JOIN PRODUCTS p ON p.ID = t.PRODUCT_ID " +
+                        "WHERE t.USER_ID = ? " +
+                        "AND p.\"TYPE\" = 'DEBIT')",
+                Boolean.class,
+                user_id));
     }
 
     public boolean getHasInvest(UUID user_id) {
-        try {
-            Integer result = jdbcTemplate.queryForObject(
-                    "SELECT t.AMOUNT  \n" +
-                            "FROM TRANSACTIONS t \n" +
-                            "WHERE t.USER_ID = ? \n" +
-                            "AND EXISTS(\n" +
-                            "SELECT 1\n" +
-                            "FROM PRODUCTS p \n" +
-                            "WHERE p.ID = t.PRODUCT_ID \n" +
-                            "AND p.\"TYPE\" = 'INVEST'\n" +
-                            ")\n" +
-                            "LIMIT 1",
-                    Integer.class,
-                    user_id);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                "SELECT EXISTS( " +
+                        "SELECT 1 " +
+                        "FROM TRANSACTIONS t " +
+                        "JOIN PRODUCTS p ON p.ID = t.PRODUCT_ID " +
+                        "WHERE t.USER_ID = ? " +
+                        "AND p.\"TYPE\" = 'INVEST')",
+                Boolean.class,
+                user_id));
     }
 
     public boolean getHasCredit(UUID user_id) {
-        try {
-            Integer result = jdbcTemplate.queryForObject(
-                    "SELECT t.AMOUNT  \n" +
-                            "FROM TRANSACTIONS t \n" +
-                            "WHERE t.USER_ID = ? \n" +
-                            "AND EXISTS(\n" +
-                            "SELECT 1\n" +
-                            "FROM PRODUCTS p \n" +
-                            "WHERE p.ID = t.PRODUCT_ID \n" +
-                            "AND p.\"TYPE\" = 'CREDIT'\n" +
-                            ")\n" +
-                            "LIMIT 1",
-                    Integer.class,
-                    user_id);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                "SELECT EXISTS( " +
+                        "SELECT 1 " +
+                        "FROM TRANSACTIONS t " +
+                        "JOIN PRODUCTS p ON p.ID = t.PRODUCT_ID " +
+                        "WHERE t.USER_ID = ? " +
+                        "AND p.\"TYPE\" = 'CREDIT')",
+                Boolean.class,
+                user_id));
     }
 
-        public int getSumSavingDeposit (UUID user_id){
-            Integer result;
-            try {
-                result = jdbcTemplate.queryForObject(
-                        "SELECT sum(t.AMOUNT) \n" +
-                                "FROM TRANSACTIONS t \n" +
-                                "WHERE t.USER_ID = ?\n" +
-                                "AND t.\"TYPE\" = 'DEPOSIT'\n" +
-                                "AND (\n" +
-                                "\tSELECT 1 \n" +
-                                "\tFROM PRODUCTS p \n" +
-                                "\tWHERE p.ID = t.PRODUCT_ID \n" +
-                                "\tAND p.\"TYPE\" = 'SAVING'\n" +
-                                ")",
-                        Integer.class,
-                        user_id);
-            } catch (Exception e) {
-                return 0;
-            }
-            return result != null ? result : 0;
-        }
-
-        public int getSumDebitDeposit (UUID user_id){
-            Integer result;
-            try {
-                result = jdbcTemplate.queryForObject(
-                        "SELECT sum(t.AMOUNT) \n" +
-                                "FROM TRANSACTIONS t \n" +
-                                "WHERE t.USER_ID = ?\n" +
-                                "AND t.\"TYPE\" = 'DEPOSIT'\n" +
-                                "AND (\n" +
-                                "\tSELECT 1 \n" +
-                                "\tFROM PRODUCTS p \n" +
-                                "\tWHERE p.ID = t.PRODUCT_ID \n" +
-                                "\tAND p.\"TYPE\" = 'DEBIT'\n" +
-                                ")",
-                        Integer.class,
-                        user_id);
-            } catch (Exception e) {
-                return 0;
-            }
-            return result != null ? result : 0;
-        }
-
-        public int getSumDebitWithdraw (UUID user_id){
-            Integer result;
-            try {
-                result = jdbcTemplate.queryForObject(
-                        "SELECT sum(t.AMOUNT) \n" +
-                                "FROM TRANSACTIONS t \n" +
-                                "WHERE t.USER_ID = ?\n" +
-                                "AND t.\"TYPE\" = 'WITHDRAW'\n" +
-                                "AND (\n" +
-                                "\tSELECT 1 \n" +
-                                "\tFROM PRODUCTS p \n" +
-                                "\tWHERE p.ID = t.PRODUCT_ID \n" +
-                                "\tAND p.\"TYPE\" = 'DEBIT'\n" +
-                                ")",
-                        Integer.class,
-                        user_id);
-            } catch (Exception e) {
-                return 0;
-            }
-            return result != null ? result : 0;
-        }
+    public int getSumSavingDeposit(UUID user_id) {
+        Integer result = jdbcTemplate.queryForObject(
+                "SELECT sum(t.AMOUNT ) " +
+                        "FROM TRANSACTIONS t " +
+                        "JOIN PRODUCTS p ON p.ID = t.PRODUCT_ID " +
+                        "WHERE t.USER_ID = ? " +
+                        "AND p.\"TYPE\" = 'SAVING' " +
+                        "AND t.\"TYPE\" = 'DEPOSIT'",
+                Integer.class,
+                user_id);
+        return result != null ? result : 0;
     }
+
+    public int getSumDebitDeposit(UUID user_id) {
+        Integer result = jdbcTemplate.queryForObject(
+                "SELECT sum(t.AMOUNT ) " +
+                        "FROM TRANSACTIONS t " +
+                        "JOIN PRODUCTS p ON p.ID = t.PRODUCT_ID " +
+                        "WHERE t.USER_ID = ? " +
+                        "AND p.\"TYPE\" = 'DEBIT' " +
+                        "AND t.\"TYPE\" = 'DEPOSIT'",
+                Integer.class,
+                user_id);
+        return result != null ? result : 0;
+    }
+
+    public int getSumDebitWithdraw(UUID user_id) {
+        Integer result = jdbcTemplate.queryForObject(
+                "SELECT sum(t.AMOUNT ) " +
+                        "FROM TRANSACTIONS t " +
+                        "JOIN PRODUCTS p ON p.ID = t.PRODUCT_ID " +
+                        "WHERE t.USER_ID = ? " +
+                        "AND p.\"TYPE\" = 'DEBIT' " +
+                        "AND t.\"TYPE\" = 'WITHDRAW'",
+                Integer.class,
+                user_id);
+        return result != null ? result : 0;
+    }
+}
