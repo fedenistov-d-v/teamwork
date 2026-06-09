@@ -1,4 +1,4 @@
-package com.starbank.recommendation.modul;
+package com.starbank.recommendation.model;
 
 import lombok.Getter;
 import lombok.Setter;

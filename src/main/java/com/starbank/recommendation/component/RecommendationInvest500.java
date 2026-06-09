@@ -1,7 +1,9 @@
-package com.starbank.recommendation.service.component;
+package com.starbank.recommendation.component;
 
-import com.starbank.recommendation.modul.RecommendationDto;
+import com.starbank.recommendation.model.RecommendationDto;
 import com.starbank.recommendation.repository.GeneralQueries;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -9,6 +11,8 @@ import java.util.UUID;
 
 @Component
 public class RecommendationInvest500 implements RecommendationRuleSet {
+    private static final Logger logger = LoggerFactory.getLogger(RecommendationInvest500.class);
+
     private final RecommendationDto recommendation = (new RecommendationDto(
             "Invest 500",
             UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"),
@@ -21,7 +25,11 @@ public class RecommendationInvest500 implements RecommendationRuleSet {
     @Override
     public Optional<RecommendationDto> check(UUID user_id) {
         if (GeneralQueries.hasDebit && !GeneralQueries.hasInvest && GeneralQueries.sumSavingDeposit > 1000) {
+            logger.debug("Прошла проверка для рекомендации \"Invest 500\".");
             return Optional.of(recommendation);
-        } else return Optional.empty();
+        } else {
+            logger.debug("Проверка НЕ прошла для рекомендации \"Invest 500\".");
+            return Optional.empty();
+        }
     }
 }

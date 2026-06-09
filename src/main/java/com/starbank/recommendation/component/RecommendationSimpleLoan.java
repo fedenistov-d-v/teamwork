@@ -1,7 +1,9 @@
-package com.starbank.recommendation.service.component;
+package com.starbank.recommendation.component;
 
-import com.starbank.recommendation.modul.RecommendationDto;
+import com.starbank.recommendation.model.RecommendationDto;
 import com.starbank.recommendation.repository.GeneralQueries;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -9,6 +11,8 @@ import java.util.UUID;
 
 @Component
 public class RecommendationSimpleLoan implements RecommendationRuleSet {
+    private static final Logger logger = LoggerFactory.getLogger(RecommendationInvest500.class);
+
     private final RecommendationDto recommendation = (new RecommendationDto(
             "Простой кредит",
             UUID.fromString("ab138afb-f3ba-4a93-b74f-0fcee86d447f"),
@@ -29,7 +33,11 @@ public class RecommendationSimpleLoan implements RecommendationRuleSet {
     public Optional<RecommendationDto> check(UUID user_id) {
         if (!GeneralQueries.hasCredit && (GeneralQueries.sumDebitDeposit > GeneralQueries.sumDebitWithdrawal)
                 && (GeneralQueries.sumDebitWithdrawal > 100000)) {
+            logger.debug("Прошла проверка для рекомендации \"Простой кредит\".");
             return Optional.of(recommendation);
-        } else return Optional.empty();
+        } else {
+            logger.debug("Проверка НЕ прошла для рекомендации \"Простой кредит\".");
+            return Optional.empty();
+        }
     }
 }

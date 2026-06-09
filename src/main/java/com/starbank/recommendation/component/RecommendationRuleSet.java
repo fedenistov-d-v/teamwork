@@ -1,6 +1,6 @@
-package com.starbank.recommendation.service.component;
+package com.starbank.recommendation.component;
 
-import com.starbank.recommendation.modul.RecommendationDto;
+import com.starbank.recommendation.model.RecommendationDto;
 
 import java.util.Optional;
 import java.util.UUID;

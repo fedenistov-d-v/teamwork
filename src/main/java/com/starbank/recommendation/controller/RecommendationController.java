@@ -1,6 +1,6 @@
 package com.starbank.recommendation.controller;
 
-import com.starbank.recommendation.modul.PatternJson;
+import com.starbank.recommendation.model.PatternJson;
 import com.starbank.recommendation.service.RecommendationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

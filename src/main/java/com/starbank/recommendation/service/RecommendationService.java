@@ -1,9 +1,11 @@
 package com.starbank.recommendation.service;
 
-import com.starbank.recommendation.modul.RecommendationDto;
+import com.starbank.recommendation.model.RecommendationDto;
 import com.starbank.recommendation.repository.GeneralQueries;
 import com.starbank.recommendation.repository.RecommendationsRepository;
-import com.starbank.recommendation.service.component.RecommendationRuleSet;
+import com.starbank.recommendation.component.RecommendationRuleSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.UUID;
 
 @Service
 public class RecommendationService {
+    private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
+
     private final List<RecommendationRuleSet> ruleSets;
     private final RecommendationsRepository generalRepository;
 
@@ -21,7 +25,16 @@ public class RecommendationService {
     }
 
     public List<RecommendationDto> getRecommendationsByIdUsers(UUID user_id) {
+        logger.info("Вызван метод для получения рекомендаций с user_id = ({})", user_id);
         calculateGeneralQueries(user_id);
+        logger.debug("hasDebit = ({}), hasInvest = ({}), hasCredit = ({}), " +
+                        "sumDebitDeposit = ({}), sumSavingDeposit = ({}), sumDebitWithdrawal = ({}),",
+                GeneralQueries.hasDebit,
+                GeneralQueries.hasInvest,
+                GeneralQueries.hasCredit,
+                GeneralQueries.sumDebitDeposit,
+                GeneralQueries.sumSavingDeposit,
+                GeneralQueries.sumDebitWithdrawal);
         return ruleSets.stream()
                 .map(rule -> rule.check(user_id))
                 .filter(Optional::isPresent)
