@@ -1,7 +1,7 @@
-package com.starbank.recommendation.component;
+package com.starbank.recommendation.rule;
 
 import com.starbank.recommendation.model.RecommendationDto;
-import com.starbank.recommendation.repository.GeneralQueries;
+import com.starbank.recommendation.repository.H2Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -10,13 +10,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Рекомендация банка "Простой кредит"
+ * Правила рекомендации "Простой кредит"
  */
 @Component
-public class RecommendationSimpleLoan implements RecommendationRuleSet {
-    private static final Logger logger = LoggerFactory.getLogger(RecommendationInvest500.class);
-
-    private final RecommendationDto recommendation = (new RecommendationDto(
+public class RuleSimpleLoan implements RecommendationRuleSet {
+    private static final Logger logger = LoggerFactory.getLogger(RuleSimpleLoan.class);
+    private final RecommendationDto recommendation = new RecommendationDto(
             "Простой кредит",
             UUID.fromString("ab138afb-f3ba-4a93-b74f-0fcee86d447f"),
             "Откройте мир выгодных кредитов с нами!\n" +
@@ -30,17 +29,26 @@ public class RecommendationSimpleLoan implements RecommendationRuleSet {
                     "приложении.\n" +
                     "Широкий выбор кредитных продуктов. Мы предлагаем кредиты на различные цели: покупку " +
                     "недвижимости, автомобиля, образование, лечение и многое другое.\n" +
-                    "Не упустите возможность воспользоваться выгодными условиями кредитования от нашей компании!"));
+                    "Не упустите возможность воспользоваться выгодными условиями кредитования от нашей компании!");
+    private final H2Repository repository;
+
+    public RuleSimpleLoan(H2Repository repository) {
+        this.repository = repository;
+    }
 
     /**
-     *Метод проверки правил.
-     * @param user_id - ID клиента банка.
-     * @return Возвращает объект рекомендации в виде Optional.
+     * Метод проверки правил.
+     *
+     * @param userId - ID клиента банка.
+     * @return Возвращает объект рекомендации в виде Optional или null.
      */
     @Override
-    public Optional<RecommendationDto> check(UUID user_id) {
-        if (!GeneralQueries.hasCredit && (GeneralQueries.sumDebitDeposit > GeneralQueries.sumDebitWithdrawal)
-                && (GeneralQueries.sumDebitWithdrawal > 100000)) {
+    public Optional<RecommendationDto> check(UUID userId) {
+        boolean hasCredit = repository.usesProductType(userId, "CREDIT");
+        long sumDepositDebit = repository.sumByTransactionTypeAndProductType(userId, "DEPOSIT", "DEBIT");
+        long sumWithdrawDebit = repository.sumByTransactionTypeAndProductType(userId, "WITHDRAW", "DEBIT");
+
+        if (!hasCredit && (sumDepositDebit > sumWithdrawDebit) && (sumWithdrawDebit > 100000)) {
             logger.debug("Прошла проверка для рекомендации \"Простой кредит\".");
             return Optional.of(recommendation);
         } else {

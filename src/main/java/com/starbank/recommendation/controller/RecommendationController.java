@@ -2,7 +2,6 @@ package com.starbank.recommendation.controller;
 
 import com.starbank.recommendation.model.PatternJson;
 import com.starbank.recommendation.service.RecommendationService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,20 +27,19 @@ public class RecommendationController {
 
     /**
      * Метод запроса: GET /recommendation/<user_id>
-     * @param user_id - ID клиента банка
+     *
+     * @param id - ID клиента банка
      * @return Формат JSON в виде:
      * {
-     * 	"user_id": <user_id>,
-     * 	"recommendations": [
-     * 		        {"name": <имя продукта>, "id": <id продукта>, "text": "текстовое описание продукта"},
-     * 		...
-     * 	]
+     * "user_id": <user_id>,
+     * "recommendations": [
+     * {"name": <имя продукта>, "id": <id продукта>, "text": "текстовое описание продукта"},
+     * ...
+     * ]
      * }
      */
-    @GetMapping("{user_id}")
-    public ResponseEntity<PatternJson> getRecommendations(@PathVariable UUID user_id) {
-        return ResponseEntity.ok(new PatternJson(
-                user_id,
-                recommendationService.getRecommendationsByIdUsers(user_id)));
+    @GetMapping("{id}")
+    public PatternJson getRecommendations(@PathVariable UUID id) {
+        return recommendationService.getRecommendationsByIdUsers(id);
     }
 }

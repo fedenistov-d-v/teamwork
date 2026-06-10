@@ -13,7 +13,6 @@ import javax.sql.DataSource;
 
 /**
  * Класс - конфигурация.
- *
  */
 @Configuration
 public class RecommendationsDataSourceConfiguration {

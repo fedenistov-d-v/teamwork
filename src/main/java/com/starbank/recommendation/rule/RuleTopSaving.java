@@ -1,7 +1,7 @@
-package com.starbank.recommendation.component;
+package com.starbank.recommendation.rule;
 
 import com.starbank.recommendation.model.RecommendationDto;
-import com.starbank.recommendation.repository.GeneralQueries;
+import com.starbank.recommendation.repository.H2Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -10,13 +10,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Рекомендация банка "Top Saving".
+ * Правила рекомендации "Top Saving".
  */
 @Component
-public class RecommendationTopSaving implements RecommendationRuleSet {
-    private static final Logger logger = LoggerFactory.getLogger(RecommendationInvest500.class);
-
-    private final RecommendationDto recommendation = (new RecommendationDto(
+public class RuleTopSaving implements RecommendationRuleSet {
+    private static final Logger logger = LoggerFactory.getLogger(RuleTopSaving.class);
+    private final RecommendationDto recommendation = new RecommendationDto(
             "Top Saving",
             UUID.fromString("59efc529-2fff-41af-baff-90ccd7402925"),
             "Откройте свою собственную «Копилку» с нашим банком! «Копилка» — это уникальный банковский " +
@@ -29,17 +28,29 @@ public class RecommendationTopSaving implements RecommendationRuleSet {
                     "и корректируйте стратегию при необходимости.\n" +
                     "Безопасность и надежность. Ваши средства находятся под защитой банка, а доступ к ним возможен " +
                     "только через мобильное приложение или интернет-банкинг.\n" +
-                    "Начните использовать «Копилку» уже сегодня и станьте ближе к своим финансовым целям!"));
+                    "Начните использовать «Копилку» уже сегодня и станьте ближе к своим финансовым целям!");
+
+    public RuleTopSaving(H2Repository repository) {
+        this.repository = repository;
+    }
+
+    private final H2Repository repository;
 
     /**
-     *Метод проверки правил.
-     * @param user_id - ID клиента банка.
-     * @return Возвращает объект рекомендации в виде Optional.
+     * Метод проверки правил.
+     *
+     * @param userId - ID клиента банка.
+     * @return Возвращает объект рекомендации в виде Optional или null.
      */
     @Override
-    public Optional<RecommendationDto> check(UUID user_id) {
-        boolean balance = GeneralQueries.sumDebitDeposit > GeneralQueries.sumDebitWithdrawal;
-        if (GeneralQueries.hasDebit && (GeneralQueries.sumDebitDeposit >= 50000 || GeneralQueries.sumSavingDeposit >= 50000) && balance) {
+    public Optional<RecommendationDto> check(UUID userId) {
+        boolean hasDebit = repository.usesProductType(userId, "DEBIT");
+        long sumDepositDebit = repository.sumByTransactionTypeAndProductType(userId, "DEPOSIT", "DEBIT");
+        long sumDepositSaving = repository.sumByTransactionTypeAndProductType(userId, "DEPOSIT", "SAVING");
+        long sumWithdrawDebit = repository.sumByTransactionTypeAndProductType(userId, "WITHDRAW", "DEBIT");
+        boolean balance = sumDepositDebit > sumWithdrawDebit;
+
+        if (hasDebit && (sumDepositDebit >= 50000 || sumDepositSaving >= 50000) && balance) {
             logger.debug("Прошла проверка для рекомендации \"Top Saving\".");
             return Optional.of(recommendation);
         } else {
