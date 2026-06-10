@@ -10,6 +10,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+/**
+ * Репозиторий. Получения данных с базы данных Н2
+ * Инжектирует JdbcTemplate jdbcTemplate - используется для создания SQL запросов.
+ * Параметр boolean showSqlQueries - выводить в лог SQL или нет. Значение параметра берётся из application.properties
+ */
 @Repository
 public class RecommendationsRepository {
     protected boolean showSqlQueries = false;
@@ -23,6 +28,11 @@ public class RecommendationsRepository {
         this.showSqlQueries = showSqlQueries;
     }
 
+    /**
+     * Метод проверяет существование хотя бы одно записи в БД банка по продуктам банка с типом DEBIT
+     * @param user_id - ID клиента банка.
+     * @return Выводится булевское значение.
+     */
     public boolean getHasDebit(UUID user_id) {
         if (showSqlQueries)
             logger.info("SQL запрос: " +
@@ -39,6 +49,11 @@ public class RecommendationsRepository {
                 user_id));
     }
 
+    /**
+     * Метод проверяет существование хотя бы одно записи в БД банка по продуктам банка с типом INVEST
+     * @param user_id - ID клиента банка.
+     * @return Выводится булевское значение.
+     */
     public boolean getHasInvest(UUID user_id) {
         if (showSqlQueries)
             logger.info("SQL запрос: " +
@@ -55,6 +70,11 @@ public class RecommendationsRepository {
                 user_id));
     }
 
+    /**
+     * Метод проверяет существование хотя бы одно записи в БД банка по продуктам банка с типом CREDIT
+     * @param user_id - ID клиента банка.
+     * @return Выводится булевское значение.
+     */
     public boolean getHasCredit(UUID user_id) {
         if (showSqlQueries)
             logger.info("SQL запрос: " +
@@ -71,6 +91,11 @@ public class RecommendationsRepository {
                 user_id));
     }
 
+    /**
+     * Метод выводит сумму пополнений по всем по всем операциям продуктов банка с типом SAVING
+     * @param user_id - ID клиента банка.
+     * @return Выводится булевское значение.
+     */
     public int getSumSavingDeposit(UUID user_id) {
         if (showSqlQueries)
             logger.info("SQL запрос: " +
@@ -88,6 +113,11 @@ public class RecommendationsRepository {
         return result != null ? result : 0;
     }
 
+    /**
+     * Метод выводит сумму пополнений по всем по всем операциям продуктов банка с типом DEBIT
+     * @param user_id - ID клиента банка.
+     * @return Выводится булевское значение.
+     */
     public int getSumDebitDeposit(UUID user_id) {
         if (showSqlQueries)
             logger.info("SQL запрос: " +
@@ -105,6 +135,11 @@ public class RecommendationsRepository {
         return result != null ? result : 0;
     }
 
+    /**
+     * Метод выводит сумму трат по всем по всем операциям продуктов банка с типом DEBIT.
+     * @param user_id - ID клиента банка.
+     * @return Выводится булевское значение.
+     */
     public int getSumDebitWithdraw(UUID user_id) {
         if (showSqlQueries)
             logger.info("SQL запрос: " +

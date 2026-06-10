@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Рекомендация банка "Invest 500"
+ */
 @Component
 public class RecommendationInvest500 implements RecommendationRuleSet {
     private static final Logger logger = LoggerFactory.getLogger(RecommendationInvest500.class);
@@ -22,6 +25,11 @@ public class RecommendationInvest500 implements RecommendationRuleSet {
                     "возможность разнообразить свой портфель, снизить риски и следить за актуальными рыночными " +
                     "тенденциями. Откройте ИИС сегодня и станьте ближе к финансовой независимости!"));
 
+    /**
+     *Метод проверки правил.
+     * @param user_id - ID клиента банка.
+     * @return Возвращает объект рекомендации в виде Optional.
+     */
     @Override
     public Optional<RecommendationDto> check(UUID user_id) {
         if (GeneralQueries.hasDebit && !GeneralQueries.hasInvest && GeneralQueries.sumSavingDeposit > 1000) {

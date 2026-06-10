@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Рекомендация банка "Простой кредит"
+ */
 @Component
 public class RecommendationSimpleLoan implements RecommendationRuleSet {
     private static final Logger logger = LoggerFactory.getLogger(RecommendationInvest500.class);
@@ -29,6 +32,11 @@ public class RecommendationSimpleLoan implements RecommendationRuleSet {
                     "недвижимости, автомобиля, образование, лечение и многое другое.\n" +
                     "Не упустите возможность воспользоваться выгодными условиями кредитования от нашей компании!"));
 
+    /**
+     *Метод проверки правил.
+     * @param user_id - ID клиента банка.
+     * @return Возвращает объект рекомендации в виде Optional.
+     */
     @Override
     public Optional<RecommendationDto> check(UUID user_id) {
         if (!GeneralQueries.hasCredit && (GeneralQueries.sumDebitDeposit > GeneralQueries.sumDebitWithdrawal)

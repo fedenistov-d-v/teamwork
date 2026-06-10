@@ -12,6 +12,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Сервис рекомендаций
+ * Инжектирует List<RecommendationRuleSet> - список всех рекомендаций банка с условиями.
+ * Инжектирует RecommendationsRepository generalRepository - репозиторий для подключения БД Н2.
+ */
 @Service
 public class RecommendationService {
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
@@ -24,6 +29,12 @@ public class RecommendationService {
         this.generalRepository = generalRepository;
     }
 
+    /**
+     * Метод определяет какие рекомендации рекомендовать клиенту банка.
+     * Использует внутренний метод общих запросов в БД - calculateGeneralQueries().
+     * @param user_id - ID клиента банка.
+     * @return список рекомендаванных рекомендаций.
+     */
     public List<RecommendationDto> getRecommendationsByIdUsers(UUID user_id) {
         logger.info("Вызван метод для получения рекомендаций с user_id = ({})", user_id);
         calculateGeneralQueries(user_id);
@@ -42,6 +53,11 @@ public class RecommendationService {
                 .toList();
     }
 
+    /**
+     * Метод общих запросов в БД
+     * @param user_id - ID клиента банка.
+     * Результаты общих запросов сохраняются в статических переменных класса GeneralQueries.
+     */
     protected void calculateGeneralQueries(UUID user_id) {
         GeneralQueries.hasDebit = generalRepository.getHasDebit(user_id);
         GeneralQueries.hasInvest = generalRepository.getHasInvest(user_id);

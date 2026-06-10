@@ -5,6 +5,9 @@ import com.starbank.recommendation.model.RecommendationDto;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Интерфейс содержит метод содержащий набор правил.
+ */
 public interface RecommendationRuleSet {
     public Optional<RecommendationDto> check(UUID user_id);
 }

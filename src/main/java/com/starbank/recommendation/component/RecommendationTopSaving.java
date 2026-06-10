@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Рекомендация банка "Top Saving".
+ */
 @Component
 public class RecommendationTopSaving implements RecommendationRuleSet {
     private static final Logger logger = LoggerFactory.getLogger(RecommendationInvest500.class);
@@ -28,6 +31,11 @@ public class RecommendationTopSaving implements RecommendationRuleSet {
                     "только через мобильное приложение или интернет-банкинг.\n" +
                     "Начните использовать «Копилку» уже сегодня и станьте ближе к своим финансовым целям!"));
 
+    /**
+     *Метод проверки правил.
+     * @param user_id - ID клиента банка.
+     * @return Возвращает объект рекомендации в виде Optional.
+     */
     @Override
     public Optional<RecommendationDto> check(UUID user_id) {
         boolean balance = GeneralQueries.sumDebitDeposit > GeneralQueries.sumDebitWithdrawal;

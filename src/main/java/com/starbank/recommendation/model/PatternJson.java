@@ -6,6 +6,9 @@ import lombok.Setter;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Шаблон контроллера для правильного отображения формата JSON
+ */
 @Getter
 @Setter
 public class PatternJson {

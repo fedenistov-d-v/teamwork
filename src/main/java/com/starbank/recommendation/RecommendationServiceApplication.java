@@ -4,6 +4,11 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author Феденистов Дмитрий Вячеславович
+ * @version Версия от 09.06.2026
+ * Сервис рекомендаций для клиентов банка "Стар"
+ */
 @SpringBootApplication
 @OpenAPIDefinition
 public class RecommendationServiceApplication {
