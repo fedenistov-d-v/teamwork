@@ -11,9 +11,19 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
+/**
+ * Класс - конфигурация.
+ */
 @Configuration
 public class RecommendationsDataSourceConfiguration {
 
+    /**
+     * Бин с названием "recommendationsDataSource"
+     * Конфигурирование БД. Прописывается путь, драйвер и устанавливается флаг "только чтение".
+     *
+     * @param recommendationsUrl - путь к БД берётся из application.properties.
+     * @return объект типа HikariDataSource.
+     */
     @Bean(name = "recommendationsDataSource")
     public DataSource recommendationsDataSource(@Value("${application.recommendations-db.url}") String recommendationsUrl) {
         var dataSource = new HikariDataSource();
@@ -23,6 +33,13 @@ public class RecommendationsDataSourceConfiguration {
         return dataSource;
     }
 
+    /**
+     * Бин с названием "recommendationsJdbcTemplate"
+     * Для использования методами в репозитории
+     *
+     * @param dataSource - объект тапа HikariDataSource берётся из бина "recommendationsDataSource"
+     * @return Возвращается объект типа JdbcTemplate
+     */
     @Bean(name = "recommendationsJdbcTemplate")
     public JdbcTemplate recommendationsJdbcTemplate(
             @Qualifier("recommendationsDataSource") DataSource dataSource
