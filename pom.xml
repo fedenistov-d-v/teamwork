@@ -118,6 +118,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Кэширование и работа с NoSQL базой данных Redis -->
+
+        <!-- Поддержка RedisTemplate, StringRedisTemplate и аннотаций @Cacheable, @CachePut, @CacheEvict -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
 	</dependencies>
 
     <build>

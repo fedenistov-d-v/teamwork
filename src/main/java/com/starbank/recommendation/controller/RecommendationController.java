@@ -2,6 +2,7 @@ package com.starbank.recommendation.controller;
 
 import com.starbank.recommendation.modul.RecommendationResponseDto;
 import com.starbank.recommendation.service.RecommendationService;
+import jakarta.validation.constraints.Positive;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +41,7 @@ public class RecommendationController {
      * }
      */
     @GetMapping("{id}")
-    public RecommendationResponseDto getRecommendations(@PathVariable UUID id) {
+    public RecommendationResponseDto getRecommendations(@PathVariable @Positive UUID id) {
         return recommendationService.getRecommendationsByIdUsers(id);
     }
 }
