@@ -1,7 +1,7 @@
 package com.starbank.recommendation.rule;
 
-import com.starbank.recommendation.modul.enumOfTypes.ProductType;
-import com.starbank.recommendation.modul.enumOfTypes.TransactionType;
+import com.starbank.recommendation.model.enums.ProductType;
+import com.starbank.recommendation.model.enums.TransactionType;
 import com.starbank.recommendation.repository.H2Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
