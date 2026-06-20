@@ -1,6 +1,6 @@
 package com.starbank.recommendation.controller;
 
-import com.starbank.recommendation.modul.RecommendationResponseDto;
+import com.starbank.recommendation.model.RecommendationResponseDto;
 import com.starbank.recommendation.service.RecommendationService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;

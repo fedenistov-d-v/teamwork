@@ -1,4 +1,4 @@
-package com.starbank.recommendation.modul.enumOfTypes;
+package com.starbank.recommendation.model.enums;
 
 public enum TransactionType {
     DEPOSIT,
