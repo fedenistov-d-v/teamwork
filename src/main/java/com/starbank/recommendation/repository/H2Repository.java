@@ -1,7 +1,7 @@
 package com.starbank.recommendation.repository;
 
-import com.starbank.recommendation.modul.enumOfTypes.ProductType;
-import com.starbank.recommendation.modul.enumOfTypes.TransactionType;
+import com.starbank.recommendation.model.enums.ProductType;
+import com.starbank.recommendation.model.enums.TransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;

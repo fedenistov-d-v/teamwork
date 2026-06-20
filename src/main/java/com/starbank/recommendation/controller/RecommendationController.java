@@ -1,6 +1,6 @@
 package com.starbank.recommendation.controller;
 
-import com.starbank.recommendation.modul.RecommendationResponseDto;
+import com.starbank.recommendation.model.RecommendationResponseDto;
 import com.starbank.recommendation.service.RecommendationService;
 import jakarta.validation.constraints.Positive;
 import org.springframework.validation.annotation.Validated;

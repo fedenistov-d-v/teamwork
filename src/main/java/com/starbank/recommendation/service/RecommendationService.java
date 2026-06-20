@@ -1,6 +1,6 @@
 package com.starbank.recommendation.service;
 
-import com.starbank.recommendation.modul.RecommendationResponseDto;
+import com.starbank.recommendation.model.RecommendationResponseDto;
 import com.starbank.recommendation.rule.RecommendationRuleSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
