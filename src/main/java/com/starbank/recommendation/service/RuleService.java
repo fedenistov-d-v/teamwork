@@ -2,6 +2,8 @@ package com.starbank.recommendation.service;
 
 import com.starbank.recommendation.model.RuleDto;
 import com.starbank.recommendation.model.RuleEntity;
+import com.starbank.recommendation.repository.RuleRepository;
+import com.starbank.recommendation.rule.RuleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +19,12 @@ import java.util.Map;
 @Service
 public class RuleService {
 
-    @Autowired
-    private ProductRulesMapper mapper;
     private final RuleRepository ruleRepository;
+    private final RuleMapper ruleMapper;
 
-    public RuleService(RuleRepository ruleRepository) {
+    public RuleService(RuleRepository ruleRepository, RuleMapper ruleMapper) {
         this.ruleRepository = ruleRepository;
+        this.ruleMapper = ruleMapper;
     }
 
     /**
@@ -32,7 +34,7 @@ public class RuleService {
      */
     @Transactional
     public void deleteRule(Long id) {
-        ruleRepository.deleteRuleById(id);
+        ruleRepository.deleteById(id);
     }
 
     /**
@@ -42,8 +44,9 @@ public class RuleService {
      */
     @Transactional
     public Map<String, List<RuleDto>> getAllRules() {
-        List<RuleDto> data = ruleRepository.getAll();
-        return Map.of("data", data);
+        List<RuleEntity> data = ruleRepository.findAll();
+
+        return Map.of("data", ruleMapper.toDtoList(data));
     }
 
     /**
@@ -54,7 +57,7 @@ public class RuleService {
      */
     @Transactional
     public RuleEntity createRuleForProduct(RuleDto ruleDto) {
-        RuleEntity entity = mapper.toEntity(ruleDto);
+        RuleEntity entity = ruleMapper.toEntity(ruleDto);
         return ruleRepository.save(entity);
     }
 }
