@@ -2,7 +2,6 @@ package com.starbank.recommendation.service;
 
 import com.starbank.recommendation.model.*;
 import com.starbank.recommendation.model.enums.QueryType;
-import com.starbank.recommendation.repository.H2Repository;
 import com.starbank.recommendation.repository.RuleRepository;
 import com.starbank.recommendation.rule.RuleCheck;
 import jakarta.annotation.PostConstruct;
@@ -37,7 +36,7 @@ public class RecommendationService {
 
     private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
 
-    public RecommendationService(RuleRepository ruleRepository, H2Repository h2Repository) {
+    public RecommendationService(RuleRepository ruleRepository) {
         this.ruleRepository = ruleRepository;
     }
 

@@ -11,8 +11,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface RuleMapper {
 
-    RuleMapper INSTANCE = Mappers.getMapper(RuleMapper.class);
-
     @Mapping(target = "id", ignore = true)
     RuleEntity toEntity(RuleDto ruleDto);
 
