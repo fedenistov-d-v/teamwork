@@ -4,6 +4,7 @@ import com.starbank.recommendation.model.RecommendationResponseDto;
 import com.starbank.recommendation.rule.RecommendationRuleSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class RecommendationService {
      * @param userId - ID клиента банка.
      * @return список рекомендованных рекомендаций.
      */
+    @Cacheable(value = "recommendations", key = "#userId")
     public RecommendationResponseDto getRecommendationsByIdUsers(UUID userId) {
         logger.info("Вызван метод для получения рекомендаций с userId = ({})", userId);
         return new RecommendationResponseDto(userId, rules.stream()
