@@ -5,6 +5,7 @@ import com.starbank.recommendation.model.enums.QueryType;
 import com.starbank.recommendation.repository.RuleRepository;
 import com.starbank.recommendation.rule.RuleCheck;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.*;
  * Инжектирует List<RuleCheck> - все объекты по проверке правил рекомендаций
  */
 @Service
+@Slf4j
 public class RecommendationService {
 
     private final RuleRepository ruleRepository;
@@ -34,8 +36,6 @@ public class RecommendationService {
         }
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(RecommendationService.class);
-
     public RecommendationService(RuleRepository ruleRepository) {
         this.ruleRepository = ruleRepository;
     }
@@ -46,7 +46,7 @@ public class RecommendationService {
      * @param user_id - ID клиента банка.
      * @return массив рекомендаций для этого пользователя
      */
-    @Cacheable(value = "recommendations", key = "#userId")
+    @Cacheable(value = "recommendations", key = "#user_id")
     public RecommendationResponseDto getRecommendationsByUserId(UUID user_id) {
 
         List<RecommendationDto> recommendations = new ArrayList<>();
@@ -72,17 +72,15 @@ public class RecommendationService {
 
         boolean result = true;
         for (OneRuleDto rule : rulesDto) {
-            try {
-                QueryType queryType = QueryType.valueOf(rule.query().toUpperCase());
-                RuleCheck ruleCheck = ruleCheckMap.get(queryType);
-                if (ruleCheck == null) {
-                    throw new IllegalArgumentException("Нет объекта класса проверки для типа запроса: " + queryType);
-                }
-                result = result && ruleCheck.check(user_id, rule);
-                if (!result) return false;
-            } catch (IllegalArgumentException e) {
-                throw new RuntimeException(e);
+            QueryType queryType = QueryType.valueOf(rule.query().toUpperCase());
+            RuleCheck ruleCheck = ruleCheckMap.get(queryType);
+            if (ruleCheck == null) {
+                log.error("Нет объекта класса проверки для типа запроса: user_id = "
+                        + user_id.toString() + ", тип запроса queryType = " + queryType);
+                throw new IllegalArgumentException("Нет объекта класса проверки для типа запроса: " + queryType);
             }
+            result = result && ruleCheck.check(user_id, rule);
+            if (!result) return false;
         }
 
         return result;

@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+/**
+ * Проверяет статус активности клиента банка по продукту банка.
+ * Активным считается клиент, который имеет количество транзакций
+ * по этому продукту не менее чем requireTransactionsCount
+ */
 @Component
 public class HandlerActiveUserOf extends BaseRuleCheck {
 
@@ -19,12 +24,9 @@ public class HandlerActiveUserOf extends BaseRuleCheck {
 
     @Override
     protected boolean isEligible(UUID user_id, OneRuleDto rule) {
-        try {
-            ProductType productType = ProductType.valueOf(rule.arguments().get(0).toUpperCase());
-            boolean result = h2Repository.countTransactionByProductType(user_id, productType) >= requireTransactionsCount;
-            return (rule.negate() ? !result : result);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
-        }
+        ProductType productType = ProductType.valueOf(rule.arguments().get(0).toUpperCase());
+
+        boolean result = h2Repository.countTransactionByProductType(user_id, productType) >= requireTransactionsCount;
+        return (rule.negate() != result);
     }
 }

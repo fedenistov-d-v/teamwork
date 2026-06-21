@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+/**
+ * Проверяет использование клиентом банка какого-либо продукта банка
+ */
 @Component
 public class HandlerUserOf extends BaseRuleCheck {
 
@@ -16,11 +19,9 @@ public class HandlerUserOf extends BaseRuleCheck {
 
     @Override
     protected boolean isEligible(UUID user_id, OneRuleDto rule) {
-        try {
-            ProductType productType = ProductType.valueOf(rule.arguments().get(0).toUpperCase());
-            return (rule.negate() ? !h2Repository.usesProductType(user_id, productType) : h2Repository.usesProductType(user_id, productType));
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
-        }
+        ProductType productType = ProductType.valueOf(rule.arguments().get(0).toUpperCase());
+
+        boolean result = h2Repository.usesProductType(user_id, productType);
+        return (rule.negate() != result);
     }
 }
