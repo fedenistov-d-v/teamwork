@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Сервис рекомендаций
@@ -46,16 +47,16 @@ public class RecommendationService {
      */
     @Cacheable(value = "recommendations", key = "#user_id")
     public RecommendationResponseDto getRecommendationsByUserId(UUID user_id) {
-
-        List<RecommendationDto> recommendations = new ArrayList<>();
-        List<RuleEntity> rules = ruleRepository.findAll();
-        for (RuleEntity rule : rules) {
-            if (isValidRule(user_id, rule.getRule())) {
-                recommendations.add(new RecommendationDto(rule.getProductId(), rule.getProductName(), rule.getProductText()));
-            }
-        }
+        List<RecommendationDto> recommendations = ruleRepository.findAll().stream()
+                .filter(rule -> isValidRule(user_id, rule.getRule()))
+                .map(this::toRecommendationDto)
+                .collect(Collectors.toList());
 
         return new RecommendationResponseDto(user_id, recommendations);
+    }
+
+    private RecommendationDto toRecommendationDto(RuleEntity rule) {
+        return new RecommendationDto(rule.getProductId(), rule.getProductName(), rule.getProductText());
     }
 
     /**
