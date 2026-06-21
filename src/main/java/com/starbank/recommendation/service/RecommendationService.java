@@ -47,7 +47,7 @@ public class RecommendationService {
      */
     @Cacheable(value = "recommendations", key = "#user_id")
     public RecommendationResponseDto getRecommendationsByUserId(UUID user_id) {
-        List<RecommendationDto> recommendations = ruleRepository.findAll().stream()
+        List<RecommendationDto> recommendations = ruleRepository.findAll().parallelStream()
                 .filter(rule -> isValidRule(user_id, rule.getRule()))
                 .map(this::toRecommendationDto)
                 .collect(Collectors.toList());
@@ -68,7 +68,7 @@ public class RecommendationService {
      *
      */
     private boolean isValidRule(UUID user_id, List<OneRuleDto> rulesDto) {
-        return rulesDto.stream()
+        return rulesDto.parallelStream()
                 .allMatch(rule -> {
                     RuleCheck ruleCheck = ruleCheckMap.get(QueryType.valueOf(rule.query().toUpperCase()));
                     if (ruleCheck == null) {
