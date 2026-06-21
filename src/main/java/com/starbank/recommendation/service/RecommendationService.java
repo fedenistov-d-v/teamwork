@@ -67,21 +67,14 @@ public class RecommendationService {
      *
      */
     private boolean isValidRule(UUID user_id, List<OneRuleDto> rulesDto) {
-
-        boolean result = true;
-        for (OneRuleDto rule : rulesDto) {
-            QueryType queryType = QueryType.valueOf(rule.query().toUpperCase());
-            RuleCheck ruleCheck = ruleCheckMap.get(queryType);
-            if (ruleCheck == null) {
-                log.error("Нет объекта класса проверки для типа запроса: user_id = "
-                        + user_id.toString() + ", тип запроса queryType = " + queryType);
-                throw new IllegalArgumentException("Нет объекта класса проверки для типа запроса: " + queryType);
-            }
-            result = result && ruleCheck.check(user_id, rule);
-            if (!result) return false;
-        }
-
-        return result;
+        return rulesDto.stream()
+                .allMatch(rule -> {
+                    RuleCheck ruleCheck = ruleCheckMap.get(QueryType.valueOf(rule.query().toUpperCase()));
+                    if (ruleCheck == null) {
+                        throw new IllegalArgumentException("Нет объекта класса проверки для типа запроса: " + rule.query());
+                    }
+                    return ruleCheck.check(user_id, rule);
+                });
     }
 
 }
