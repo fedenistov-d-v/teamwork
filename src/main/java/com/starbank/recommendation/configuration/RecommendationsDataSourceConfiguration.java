@@ -17,6 +17,8 @@ import javax.sql.DataSource;
 @Configuration
 public class RecommendationsDataSourceConfiguration {
 
+
+
     /**
      * Бин с названием "recommendationsDataSource"
      * Конфигурирование БД. Прописывается путь, драйвер и устанавливается флаг "только чтение".
