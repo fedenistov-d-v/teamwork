@@ -3,11 +3,13 @@ package com.starbank.recommendation.controller;
 import com.starbank.recommendation.model.RuleDto;
 import com.starbank.recommendation.model.RuleEntity;
 import com.starbank.recommendation.service.RuleService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
+@Validated
 @RestController
 @RequestMapping("/rule")
 public class RuleController {
