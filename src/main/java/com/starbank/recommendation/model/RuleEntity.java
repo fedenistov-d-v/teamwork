@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import lombok.Data;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Entity
@@ -18,6 +20,9 @@ public class RuleEntity {
     private String productName;
     private UUID productId;
     private String productText;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
     private List<OneRuleDto> rule;
 
     public RuleEntity() {

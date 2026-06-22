@@ -32,7 +32,8 @@ public class H2Repository {
     /**
      * Метод проверяет существование хотя бы одно записи в БД банка по типу продукта банка
      *
-     * @param userId - ID клиента банка.
+     * @param userId      - ID клиента банка.
+     * @param productType -  тип продукта банка
      * @return Выводится булевское значение.
      */
     public boolean usesProductType(UUID userId, ProductType productType) {
@@ -55,7 +56,9 @@ public class H2Repository {
     /**
      * Метод выводит сумму по типу транзакций и по типу продукта банка
      *
-     * @param userId - ID клиента банка.
+     * @param userId          - ID клиента банка.
+     * @param transactionType - тип транзакции
+     * @param productType     -  тип продукта банка
      */
     public long sumByTransactionTypeAndProductType(UUID userId,
                                                    TransactionType transactionType,
@@ -78,4 +81,31 @@ public class H2Repository {
                 transactionType.name());
         return result != null ? result : 0;
     }
+
+    /**
+     * Метод выводит количество транзакций клиента банка по типу продукта банка
+     *
+     * @param userId          - ID клиента банка.
+     * @param productType     -  тип продукта банка
+     */
+    public long countTransactionByProductType(UUID userId, ProductType productType) {
+
+        if (showSqlQueries)
+            logger.info("SQL запрос: " +
+                            "SELECT count(t.TYPE) FROM TRANSACTIONS t JOIN PRODUCTS p ON p.ID = t.PRODUCT_ID " +
+                            "WHERE t.USER_ID = '{}' AND p.\"TYPE\" = '{}' )",
+                    userId, productType);
+        Long result = jdbcTemplate.queryForObject(
+                "SELECT count(t.TYPE ) " +
+                        "FROM TRANSACTIONS t " +
+                        "JOIN PRODUCTS p ON p.ID = t.PRODUCT_ID " +
+                        "WHERE t.USER_ID = ? " +
+                        "AND p.\"TYPE\" = ? ",
+                Long.class,
+                userId,
+                productType.name());
+
+        return result;
+    }
+
 }
