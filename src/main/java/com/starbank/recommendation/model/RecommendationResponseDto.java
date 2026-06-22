@@ -1,10 +1,10 @@
-package com.starbank.recommendation.modul;
+package com.starbank.recommendation.model;
 
 import java.util.List;
 import java.util.UUID;
 
 public record RecommendationResponseDto(
-        UUID userId,
+        UUID user_id,
         List<RecommendationDto> recommendations
 ) {
 }

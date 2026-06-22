@@ -1,13 +1,14 @@
 package com.starbank.recommendation.repository;
 
-import com.starbank.recommendation.modul.enumOfTypes.ProductType;
-import com.starbank.recommendation.modul.enumOfTypes.TransactionType;
+import com.starbank.recommendation.model.enums.ProductType;
+import com.starbank.recommendation.model.enums.TransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.UUID;
 
@@ -32,9 +33,16 @@ public class H2Repository {
     /**
      * Метод проверяет существование хотя бы одно записи в БД банка по типу продукта банка
      *
-     * @param userId - ID клиента банка.
+     * @param userId      - ID клиента банка.
+     * @param productType -  тип продукта банка
      * @return Выводится булевское значение.
      */
+
+    @Cacheable(
+            value = "transaction-count-cache",
+            key = "#userId + '_' + #productType"
+    )
+
     public boolean usesProductType(UUID userId, ProductType productType) {
         if (showSqlQueries)
             logger.info("SQL запрос: " +
@@ -55,8 +63,15 @@ public class H2Repository {
     /**
      * Метод выводит сумму по типу транзакций и по типу продукта банка
      *
-     * @param userId - ID клиента банка.
+     * @param userId          - ID клиента банка.
+     * @param transactionType - тип транзакции
+     * @param productType     -  тип продукта банка
      */
+    @Cacheable(
+            value = "transaction-sum-cache",
+            key = "#userId + '_' + #transactionType + '_' + #productType"
+    )
+
     public long sumByTransactionTypeAndProductType(UUID userId,
                                                    TransactionType transactionType,
                                                    ProductType productType) {
@@ -78,4 +93,37 @@ public class H2Repository {
                 transactionType.name());
         return result != null ? result : 0;
     }
+
+    /**
+     * Метод выводит количество транзакций клиента банка по типу продукта банка
+     *
+     * @param userId          - ID клиента банка.
+     * @param productType     -  тип продукта банка
+     */
+
+    @Cacheable(
+            value = "transaction-count-cache",
+            key = "#userId + '_' + #productType"
+    )
+
+    public long countTransactionByProductType(UUID userId, ProductType productType) {
+
+        if (showSqlQueries)
+            logger.info("SQL запрос: " +
+                            "SELECT count(t.TYPE) FROM TRANSACTIONS t JOIN PRODUCTS p ON p.ID = t.PRODUCT_ID " +
+                            "WHERE t.USER_ID = '{}' AND p.\"TYPE\" = '{}' )",
+                    userId, productType);
+        Long result = jdbcTemplate.queryForObject(
+                "SELECT count(t.TYPE ) " +
+                        "FROM TRANSACTIONS t " +
+                        "JOIN PRODUCTS p ON p.ID = t.PRODUCT_ID " +
+                        "WHERE t.USER_ID = ? " +
+                        "AND p.\"TYPE\" = ? ",
+                Long.class,
+                userId,
+                productType.name());
+
+        return result;
+    }
+
 }

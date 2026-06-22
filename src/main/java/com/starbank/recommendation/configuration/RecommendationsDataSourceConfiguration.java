@@ -19,7 +19,7 @@ public class RecommendationsDataSourceConfiguration {
 
     /**
      * Бин с названием "recommendationsDataSource"
-     * Конфигурирование БД. Прописывается путь, драйвер и устанавливается флаг "только чтение".
+     * Конфигурирование БД. Прописывается путь, драйвер.
      *
      * @param recommendationsUrl - путь к БД берётся из application.properties.
      * @return объект типа HikariDataSource.
@@ -29,7 +29,6 @@ public class RecommendationsDataSourceConfiguration {
         var dataSource = new HikariDataSource();
         dataSource.setJdbcUrl(recommendationsUrl);
         dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setReadOnly(true);
         return dataSource;
     }
 

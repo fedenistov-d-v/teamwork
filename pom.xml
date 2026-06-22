@@ -54,7 +54,18 @@
             <artifactId>h2</artifactId>
         </dependency>
 
+        <!-- JPA -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 
+        <!-- PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
         <!-- Управление миграциями базы данных (Liquibase)
         <dependency>
             <groupId>org.liquibase</groupId>
@@ -118,7 +129,27 @@
             <scope>test</scope>
         </dependency>
 
-	</dependencies>
+        <!-- Кэширование и работа с NoSQL базой данных Redis -->
+
+        <!-- Поддержка RedisTemplate, StringRedisTemplate и аннотаций @Cacheable, @CachePut, @CacheEvict -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.5.5.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.5.5.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
 
     <build>
         <plugins>
