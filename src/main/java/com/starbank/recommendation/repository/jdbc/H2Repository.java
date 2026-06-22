@@ -1,11 +1,12 @@
-package com.starbank.recommendation.repository;
+package com.starbank.recommendation.repository.jdbc;
 
-import com.starbank.recommendation.modul.enumOfTypes.ProductType;
-import com.starbank.recommendation.modul.enumOfTypes.TransactionType;
+import com.starbank.recommendation.model.enumOfTypes.ProductType;
+import com.starbank.recommendation.model.enumOfTypes.TransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +17,8 @@ import java.util.UUID;
  * Инжектирует <code>JdbcTemplate jdbcTemplate</code> - используется для создания SQL запросов.
  * Параметр boolean showSqlQueries - выводить в лог SQL или нет. Значение параметра берётся из application.properties
  */
-@Repository
+@Repository("jdbcRuleRepository")
+@EnableJdbcRepositories(basePackages = "com.starbank.recommendation.repository.jdbc")
 public class H2Repository {
     protected boolean showSqlQueries;
     private static final Logger logger = LoggerFactory.getLogger(H2Repository.class);

@@ -1,6 +1,6 @@
 package com.starbank.recommendation.rule;
 
-import com.starbank.recommendation.modul.RecommendationDto;
+import com.starbank.recommendation.model.RecommendationDto;
 
 import java.util.Optional;
 import java.util.UUID;

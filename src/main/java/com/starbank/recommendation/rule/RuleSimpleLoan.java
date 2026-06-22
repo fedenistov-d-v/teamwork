@@ -1,10 +1,11 @@
 package com.starbank.recommendation.rule;
 
-import com.starbank.recommendation.modul.enumOfTypes.ProductType;
-import com.starbank.recommendation.modul.enumOfTypes.TransactionType;
-import com.starbank.recommendation.repository.H2Repository;
+import com.starbank.recommendation.model.enumOfTypes.ProductType;
+import com.starbank.recommendation.model.enumOfTypes.TransactionType;
+import com.starbank.recommendation.repository.jdbc.H2Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -16,6 +17,8 @@ import java.util.UUID;
 public class RuleSimpleLoan extends TemplateForRules {
     private static final Logger logger = LoggerFactory.getLogger(RuleSimpleLoan.class);
     private static final long MIN_DEBIT_WITHDRAW = 100000;
+
+    @Qualifier("jdbcRuleRepository")
     private final H2Repository repository;
 
     public RuleSimpleLoan(H2Repository repository) {

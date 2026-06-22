@@ -54,13 +54,29 @@
             <artifactId>h2</artifactId>
         </dependency>
 
+        <dependency> <!-- Подключение jpa -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 
-        <!-- Управление миграциями базы данных (Liquibase)
+        <dependency> <!-- Подключение е PostgreSQL -->
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--
+        <dependency>  Подключение Liquibase
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency> -->
+
+        <!-- Управление миграциями базы данных (Liquibase) -->
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>4.31.1</version>
-        </dependency> -->
+        </dependency>
 
         <!-- Валидация входных данных-->
 
@@ -116,6 +132,14 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Кэширование и работа с NoSQL базой данных Redis -->
+
+        <!-- Поддержка RedisTemplate, StringRedisTemplate и аннотаций @Cacheable, @CachePut, @CacheEvict -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
 	</dependencies>
