@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.UUID;
 
@@ -36,6 +37,12 @@ public class H2Repository {
      * @param productType -  тип продукта банка
      * @return Выводится булевское значение.
      */
+
+    @Cacheable(
+            value = "transaction-count-cache",
+            key = "#userId + '_' + #productType"
+    )
+
     public boolean usesProductType(UUID userId, ProductType productType) {
         if (showSqlQueries)
             logger.info("SQL запрос: " +
@@ -60,6 +67,11 @@ public class H2Repository {
      * @param transactionType - тип транзакции
      * @param productType     -  тип продукта банка
      */
+    @Cacheable(
+            value = "transaction-sum-cache",
+            key = "#userId + '_' + #transactionType + '_' + #productType"
+    )
+
     public long sumByTransactionTypeAndProductType(UUID userId,
                                                    TransactionType transactionType,
                                                    ProductType productType) {
@@ -88,6 +100,12 @@ public class H2Repository {
      * @param userId          - ID клиента банка.
      * @param productType     -  тип продукта банка
      */
+
+    @Cacheable(
+            value = "transaction-count-cache",
+            key = "#userId + '_' + #productType"
+    )
+
     public long countTransactionByProductType(UUID userId, ProductType productType) {
 
         if (showSqlQueries)
