@@ -74,7 +74,13 @@ public class RecommendationService {
                     if (ruleCheck == null) {
                         throw new IllegalArgumentException("Нет объекта класса проверки для типа запроса: " + rule.query());
                     }
-                    return ruleCheck.check(user_id, rule);
+                    try {
+                        return ruleCheck.check(user_id, rule);
+                    } catch (Exception e) {
+                        log.error("Ошибка при обработке правила:user_id= " + user_id
+                                + ", rule =" + rule + ". Текст ошибки:" + e.getMessage());
+                        throw e;
+                    }
                 });
     }
 
