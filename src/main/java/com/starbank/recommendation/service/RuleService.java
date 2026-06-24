@@ -2,9 +2,8 @@ package com.starbank.recommendation.service;
 
 import com.starbank.recommendation.model.RuleDto;
 import com.starbank.recommendation.model.RuleEntity;
-import com.starbank.recommendation.repository.RuleRepository;
+import com.starbank.recommendation.repository.jpa.RuleRepository;
 import com.starbank.recommendation.rule.RuleMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

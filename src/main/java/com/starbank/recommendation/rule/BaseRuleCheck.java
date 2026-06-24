@@ -2,7 +2,7 @@ package com.starbank.recommendation.rule;
 
 import com.starbank.recommendation.model.OneRuleDto;
 import com.starbank.recommendation.model.enums.QueryType;
-import com.starbank.recommendation.repository.H2Repository;
+import com.starbank.recommendation.repository.jdbc.H2Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;

@@ -42,6 +42,6 @@ public class RecommendationController {
      */
     @GetMapping("{id}")
     public RecommendationResponseDto getRecommendations(@PathVariable @Positive UUID id) {
-        return recommendationService.getRecommendationsByIdUsers(id);
+        return recommendationService.getRecommendationsByUserId(id);
     }
 }

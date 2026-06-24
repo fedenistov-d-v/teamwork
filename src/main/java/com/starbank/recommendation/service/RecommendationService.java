@@ -2,7 +2,7 @@ package com.starbank.recommendation.service;
 
 import com.starbank.recommendation.model.*;
 import com.starbank.recommendation.model.enums.QueryType;
-import com.starbank.recommendation.repository.RuleRepository;
+import com.starbank.recommendation.repository.jpa.RuleRepository;
 import com.starbank.recommendation.rule.RuleCheck;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
