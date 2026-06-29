@@ -36,7 +36,7 @@ public class H2Repository {
      * Метод проверяет существование хотя бы одно записи в БД банка по типу продукта банка
      *
      * @param userId      - ID клиента банка.
-     * @param productType -  тип продукта банка
+     * @param productType - тип продукта банка
      * @return Выводится булевское значение.
      */
 
@@ -67,7 +67,7 @@ public class H2Repository {
      *
      * @param userId          - ID клиента банка.
      * @param transactionType - тип транзакции
-     * @param productType     -  тип продукта банка
+     * @param productType     - тип продукта банка
      */
     @Cacheable(
             value = "transaction-sum-cache",
@@ -100,12 +100,12 @@ public class H2Repository {
      * Метод выводит количество транзакций клиента банка по типу продукта банка
      *
      * @param userId          - ID клиента банка.
-     * @param productType     -  тип продукта банка
+     * @param productType     - тип продукта банка
      */
 
     @Cacheable(
             value = "transaction-count-cache",
-            key = "#userId + '_' + #productType"
+            key = "#userId + '_' + #productType + '_' + #count"
     )
 
     public long countTransactionByProductType(UUID userId, ProductType productType) {
