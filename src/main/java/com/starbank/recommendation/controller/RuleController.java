@@ -1,7 +1,6 @@
 package com.starbank.recommendation.controller;
 
 import com.starbank.recommendation.model.RuleDto;
-import com.starbank.recommendation.model.RuleEntity;
 import com.starbank.recommendation.service.RuleService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +21,13 @@ public class RuleController {
     /**
      * Создает новое динамическое правило.
      * Ожидает JSON {@link RuleDto} в теле запроса.
-     * Возвращает сохраненную сущность правила.
+     * Возвращает ruleDto правила.
      *
      * @param ruleDto данные нового правила
-     * @return сохраненная сущность правила
+     * @return ruleDto правила
      */
     @PostMapping
-    public RuleEntity createRule(@RequestBody RuleDto ruleDto) {
+    public RuleDto createRule(@RequestBody RuleDto ruleDto) {
         return ruleService.createRuleForProduct(ruleDto);
     }
 

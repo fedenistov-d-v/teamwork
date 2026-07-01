@@ -52,11 +52,12 @@ public class RuleService {
      * Создает новое правило для банковского продукта
      *
      * @param ruleDto DTO вновь создаваемого правила по продукту со всеми его подправилами
-     * @return Возвращает сущность нового правила
+     * @return Возвращает DTO нового правила
      */
     @Transactional
-    public RuleEntity createRuleForProduct(RuleDto ruleDto) {
+    public RuleDto createRuleForProduct(RuleDto ruleDto) {
         RuleEntity entity = ruleMapper.toEntity(ruleDto);
-        return ruleRepository.save(entity);
+        RuleEntity savedEntity = ruleRepository.save(entity);
+        return  ruleMapper.toDto(savedEntity);
     }
 }
