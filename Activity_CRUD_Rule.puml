@@ -1,4 +1,4 @@
-a@startuml
+@startuml
 title Activity CRUD Rule
 start
 if(Request?) then(POST)
