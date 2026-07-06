@@ -1,0 +1,34 @@
+@startuml
+title Component Diagram
+skinparam componentStyle rectangle
+actor Client
+actor Admin
+database PostgreSQL
+database H2
+database Redis
+package "Spring Boot Application"{
+component RecommendationController
+component RuleController
+component RecommendationService
+component RuleService
+component RuleRepository
+component H2Repository
+component RuleMapper
+interface RuleCheck
+interface RecommendationRuleSet
+}
+Client-->RecommendationController
+Admin-->RuleController
+RecommendationController-->RecommendationService
+RuleController-->RuleService
+RecommendationService-->RuleRepository
+RecommendationService-->RuleCheck: List<RuleCheck>
+RecommendationService-->RecommendationRuleSet: List<RecommendationRuleSet>
+RuleCheck-->H2Repository
+RecommendationRuleSet-->H2Repository
+RuleRepository-->PostgreSQL
+H2Repository-->H2
+RecommendationService-->Redis:@Cacheable
+RuleService-->RuleRepository
+RuleService-->RuleMapper
+@enduml
