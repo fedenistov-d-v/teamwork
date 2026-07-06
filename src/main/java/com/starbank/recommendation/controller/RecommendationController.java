@@ -19,7 +19,7 @@ import java.util.UUID;
  */
 @Validated
 @RestController
-@RequestMapping("recommendation")
+@RequestMapping("/recommendation")
 public class RecommendationController {
     private final RecommendationService recommendationService;
 
@@ -30,7 +30,7 @@ public class RecommendationController {
     /**
      * Метод запроса: GET /recommendation/<user_id>
      *
-     * @param id - ID клиента банка
+     * @param user_id - ID клиента банка
      * @return JSON в виде:
      * {
      * "user_id": <user_id>,
@@ -40,8 +40,13 @@ public class RecommendationController {
      * ]
      * }
      */
-    @GetMapping("{id}")
-    public RecommendationResponseDto getRecommendations(@PathVariable @Positive UUID id) {
-        return recommendationService.getRecommendationsByIdUsers(id);
+    @GetMapping("/{id}")
+    public RecommendationResponseDto getRecommendations(@PathVariable @Positive UUID user_id) {
+        return recommendationService.getRecommendationsByUserId(user_id);
+    }
+
+    @GetMapping("static/{user_id}")
+    public RecommendationResponseDto getRecommendationsStatic(@PathVariable @Positive UUID user_id) {
+        return recommendationService.getRecommendationsByIdUsersStatic(user_id);
     }
 }

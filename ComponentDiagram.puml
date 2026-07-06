@@ -1,0 +1,145 @@
+@startuml
+title Диаграмма компонентов - Система рекомендаций банка
+
+skinparam componentStyle rectangle
+
+'========================
+' Внешние системы
+'========================
+
+rectangle "Клиент (Frontend)" as client
+rectangle "Администратор" as admin
+
+database "PostgreSQL\n(rule_entity)" as postgres
+database "H2 (Read Only)\n(clients, products, transactions)" as h2
+database "Redis (Кеш)" as redis
+
+'========================
+' Spring Boot Application
+'========================
+
+package "Spring Boot Application" {
+
+component "RecommendationController" as rec_controller <<REST Controller>>
+component "RuleController" as rule_controller <<REST Controller>>
+
+component "RecommendationService" as rec_service <<Service>>
+component "RuleService" as rule_service <<Service>>
+
+component "RecommendationRuleSet" as rule_set <<Interface>>
+component "RuleCheck" as rule_check <<Interface>>
+
+component "BaseRuleCheck" as base_rule_check <<Abstract>>
+
+component "HandlerUserOf" as handler1 <<Handler>>
+component "HandlerActiveUserOf" as handler2 <<Handler>>
+component "HandlerTransactionSumCompare" as handler3 <<Handler>>
+component "HandlerTransactionSumCompareDepositWithdraw" as handler4 <<Handler>>
+
+component "RuleRepository" as rule_repo <<JPA Repository>>
+component "H2Repository" as h2_repo <<JDBC Repository>>
+component "RuleMapper" as mapper <<Mapper>>
+}
+
+'========================
+' Описание компонентов
+'========================
+
+note right of rec_controller
+GET /recommendation/{id}
+GET /recommendation/static/{id}
+end note
+
+note right of rule_controller
+POST /rule
+GET /rule
+DELETE /rule/{id}
+end note
+
+note right of rec_service
+getRecommendationsByUserId()
+getRecommendationsByUserIdStatic()
+end note
+
+note right of rule_service
+createRuleForProduct()
+getAllRules()
+deleteRule()
+end note
+
+note right of rule_set
+Статические правила:
+- RuleInvest500
+- RuleSimpleLoan
+- RuleTopSaving
+end note
+
+note right of rule_check
+check()
+end note
+
+note right of base_rule_check
+isEligible()
+end note
+
+note right of handler1
+Проверка наличия продукта
+end note
+
+note right of handler2
+Проверка активности
+>= 5 транзакций
+end note
+
+note right of handler3
+Сравнение суммы транзакций
+end note
+
+note right of handler4
+Сравнение
+DEPOSIT / WITHDRAW
+end note
+
+note right of rule_repo
+findAll()
+save()
+deleteById()
+end note
+
+note right of h2_repo
+usesProductType()
+countTransactionByProductType()
+sumByTransactionTypeAndProductType()
+end note
+
+note right of mapper
+toEntity()
+toDtoList()
+end note
+
+'========================
+' Связи
+'========================
+
+client --> rec_controller : HTTP GET
+admin --> rule_controller : HTTP
+
+rec_controller --> rec_service
+rec_service --> redis : @Cacheable
+rec_service --> rule_repo : findAll()
+rec_service --> rule_check : check()
+
+rule_check --> h2_repo
+h2_repo --> h2
+
+rule_repo --> postgres
+
+rec_service --> rule_set
+rule_set --> h2_repo
+
+rule_controller --> rule_service
+rule_service --> rule_repo
+rule_service --> mapper
+rule_service --> redis : cache eviction
+
+@enduml

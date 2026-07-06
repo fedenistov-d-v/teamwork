@@ -1,0 +1,82 @@
+@startuml
+title Диаграмма деятельности - Алгоритм выдачи динамических рекомендаций
+
+start
+
+:Получен запрос с user_id;
+
+:Проверка кеша Redis;
+
+if (Есть в кеше?) then ([ДА])
+    :Возврат закешированных\nрекомендаций;
+    stop
+else ([НЕТ])
+
+    :Загрузка всех правил\nиз PostgreSQL\n(ruleRepository.findAll());
+
+    :Для каждого правила (parallelStream);
+
+    repeat
+        :Получить список подправил\n(OneRuleDto);
+
+        :Для каждого подправила (stream);
+
+        repeat
+            :Взять следующее подправило;
+            :Определить QueryType;
+            :Найти соответствующий Handler;
+
+            if (Handler найден?) then ([ДА])
+
+                if (QueryType == USER_OF) then ([ДА])
+                    :Проверить наличие продукта\nh2Repository.usesProductType();
+                elseif (QueryType == ACTIVE_USER_OF) then ([ДА])
+                    :Проверить активность (>=5 транзакций)\nh2Repository.countTransactionByProductType();
+                elseif (QueryType == TRANSACTION_SUM_COMPARE) then ([ДА])
+                    :Сравнить сумму транзакций\nс пороговым значением\nh2Repository.sumByTransactionTypeAndProductType();
+                elseif (QueryType == TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW) then ([ДА])
+                    :Сравнить суммы DEPOSIT и WITHDRAW\nh2Repository.sumByTransactionTypeAndProductType();
+                else ([НЕИЗВЕСТНЫЙ])
+                    :Выбросить исключение;
+                    stop
+                endif
+
+                :Применить negate\n(результат = negate != rawResult);
+
+                if (результат == false?) then ([ДА])
+                    :ПРЕРВАТЬ обработку подправил\n(allMatch() возвращает false);
+                    note right
+                        <b>Важно!</b>
+                        allMatch() - операция короткого замыкания.
+                        При первом же false дальнейшая
+                        проверка подправил НЕ выполняется.
+                    end note
+                    :Перейти к следующему правилу;
+                else ([НЕТ])
+                    :Продолжить проверку\nследующего подправила;
+                endif
+
+            else ([НЕТ])
+                :Выбросить исключение;
+                stop
+            endif
+
+        repeat while (Есть еще подправила?) is ([ДА]) and (результат == true)
+        ->[НЕТ или результат == false];
+
+        if (результат == true?) then ([ДА])
+            :Добавить рекомендацию\nв список;
+        else ([НЕТ])
+            :Пропустить правило;
+        endif
+
+    repeat while (Есть еще правила?) is ([ДА])
+    ->[НЕТ];
+
+    :Сохранить результат в Redis;
+    :Вернуть RecommendationResponseDto;
+    stop
+
+endif
+
+@enduml
