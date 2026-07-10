@@ -1,0 +1,19 @@
+@startuml
+title Activity CRUD Rule
+start
+if(Request?) then(POST)
+:Validate DTO;
+:Map DTO->Entity;
+:Save Rule;
+:Return entity;
+elseif(GET)
+:Load all Rules;
+:Map to DTO;
+:Return data;
+else(DELETE)
+:Find by id;
+:Delete rule;
+:Return HTTP 204;
+endif
+stop
+@enduml

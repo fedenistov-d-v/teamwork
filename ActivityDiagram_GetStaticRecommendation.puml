@@ -1,0 +1,16 @@
+@startuml
+title Activity GET /recommendation/static/{id}
+start
+:Get user_id;
+:Get List<RecommendationRuleSet>;
+repeat
+:Next RecommendationRuleSet;
+:rule.check(user_id);
+if(Present?) then(yes)
+:Add RecommendationDto;
+endif
+repeat while(more rules?) is(yes)
+->no;
+:Return RecommendationResponseDto;
+stop
+@enduml

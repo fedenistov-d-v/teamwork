@@ -1,4 +1,4 @@
-package com.starbank.recommendation.repository;
+package com.starbank.recommendation.repository.jdbc;
 
 import com.starbank.recommendation.model.enums.ProductType;
 import com.starbank.recommendation.model.enums.TransactionType;
@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,7 +18,8 @@ import java.util.UUID;
  * Инжектирует <code>JdbcTemplate jdbcTemplate</code> - используется для создания SQL запросов.
  * Параметр boolean showSqlQueries - выводить в лог SQL или нет. Значение параметра берётся из application.properties
  */
-@Repository
+@Repository("jdbcRuleRepository")
+@EnableJdbcRepositories(basePackages = "com.starbank.recommendation.repository.jdbc")
 public class H2Repository {
     protected boolean showSqlQueries;
     private static final Logger logger = LoggerFactory.getLogger(H2Repository.class);
@@ -34,7 +36,7 @@ public class H2Repository {
      * Метод проверяет существование хотя бы одно записи в БД банка по типу продукта банка
      *
      * @param userId      - ID клиента банка.
-     * @param productType -  тип продукта банка
+     * @param productType - тип продукта банка
      * @return Выводится булевское значение.
      */
 
@@ -65,7 +67,7 @@ public class H2Repository {
      *
      * @param userId          - ID клиента банка.
      * @param transactionType - тип транзакции
-     * @param productType     -  тип продукта банка
+     * @param productType     - тип продукта банка
      */
     @Cacheable(
             value = "transaction-sum-cache",
@@ -98,12 +100,12 @@ public class H2Repository {
      * Метод выводит количество транзакций клиента банка по типу продукта банка
      *
      * @param userId          - ID клиента банка.
-     * @param productType     -  тип продукта банка
+     * @param productType     - тип продукта банка
      */
 
     @Cacheable(
             value = "transaction-count-cache",
-            key = "#userId + '_' + #productType"
+            key = "#userId + '_' + #productType + '_' + #count"
     )
 
     public long countTransactionByProductType(UUID userId, ProductType productType) {

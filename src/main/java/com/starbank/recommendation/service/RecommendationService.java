@@ -1,8 +1,10 @@
 package com.starbank.recommendation.service;
 
+import com.starbank.recommendation.exception.RuleExecutionFailException;
 import com.starbank.recommendation.model.*;
 import com.starbank.recommendation.model.enums.QueryType;
-import com.starbank.recommendation.repository.RuleRepository;
+import com.starbank.recommendation.repository.jpa.RuleRepository;
+import com.starbank.recommendation.rule.RecommendationRuleSet;
 import com.starbank.recommendation.rule.RuleCheck;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ public class RecommendationService {
     private List<RuleCheck> ruleChecks;
 
     private final Map<QueryType, RuleCheck> ruleCheckMap = new HashMap<>();
+    private final List<RecommendationRuleSet> rules;
 
     @PostConstruct
     public void init() {
@@ -35,8 +38,9 @@ public class RecommendationService {
         }
     }
 
-    public RecommendationService(RuleRepository ruleRepository) {
+    public RecommendationService(RuleRepository ruleRepository, List<RecommendationRuleSet> rules) {
         this.ruleRepository = ruleRepository;
+        this.rules = rules;
     }
 
     /**
@@ -74,8 +78,21 @@ public class RecommendationService {
                     if (ruleCheck == null) {
                         throw new IllegalArgumentException("Нет объекта класса проверки для типа запроса: " + rule.query());
                     }
-                    return ruleCheck.check(user_id, rule);
+                    try {
+                        return ruleCheck.check(user_id, rule);
+                    } catch (Exception e) {
+                        log.error("Ошибка при обработке правила:user_id= " + user_id
+                                + ", rule =" + rule + ". Текст ошибки:" + e.getMessage());
+                         throw new RuleExecutionFailException("Неизвестная ошибка при обработке правил");
+                    }
                 });
+    }
+    public RecommendationResponseDto getRecommendationsByIdUsersStatic(UUID user_id) {
+        return new RecommendationResponseDto(user_id, rules.stream()
+                .map(rule -> rule.check(user_id))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList());
     }
 
 }

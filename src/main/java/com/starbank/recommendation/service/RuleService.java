@@ -2,9 +2,8 @@ package com.starbank.recommendation.service;
 
 import com.starbank.recommendation.model.RuleDto;
 import com.starbank.recommendation.model.RuleEntity;
-import com.starbank.recommendation.repository.RuleRepository;
+import com.starbank.recommendation.repository.jpa.RuleRepository;
 import com.starbank.recommendation.rule.RuleMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,11 +52,12 @@ public class RuleService {
      * Создает новое правило для банковского продукта
      *
      * @param ruleDto DTO вновь создаваемого правила по продукту со всеми его подправилами
-     * @return Возвращает сущность нового правила
+     * @return Возвращает DTO нового правила
      */
     @Transactional
-    public RuleEntity createRuleForProduct(RuleDto ruleDto) {
+    public RuleDto createRuleForProduct(RuleDto ruleDto) {
         RuleEntity entity = ruleMapper.toEntity(ruleDto);
-        return ruleRepository.save(entity);
+        RuleEntity savedEntity = ruleRepository.save(entity);
+        return  ruleMapper.toDto(savedEntity);
     }
 }

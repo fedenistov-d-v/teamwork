@@ -1,0 +1,27 @@
+@startuml
+title Activity GET /recommendation/{id}
+start
+:Controller receives user_id;
+:RecommendationService.getRecommendationsByUserId();
+:Load rules from RuleRepository;
+repeat
+:Next Rule;
+:Validate Rule;
+repeat
+:Next OneRuleDto;
+:Find RuleCheck by QueryType;
+:RuleCheck.check();
+if(valid?) then(yes)
+else(no)
+break
+endif
+repeat while(more conditions?) is(yes)
+->no;
+if(rule valid?) then(yes)
+:Add RecommendationDto;
+endif
+repeat while(more rules?) is(yes)
+->no;
+:Return RecommendationResponseDto;
+stop
+@enduml

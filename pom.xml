@@ -66,12 +66,13 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <!-- Управление миграциями базы данных (Liquibase)
+
+        <!-- Управление миграциями базы данных (Liquibase) -->
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>4.31.1</version>
-        </dependency> -->
+        </dependency>
 
         <!-- Валидация входных данных-->
 
@@ -137,6 +138,7 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <!-- Это уже есть
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
@@ -147,7 +149,7 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>1.5.5.Final</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency> -->
 
     </dependencies>
 
