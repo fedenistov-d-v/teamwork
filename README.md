@@ -44,9 +44,7 @@ controller → service → rule (chain of responsibility)
 | GET | `/rule` | Все правила |
 | GET | `/rule/{id}` | Правило по ID |
 | POST | `/rule` | Создать правило |
-| PUT | `/rule/{id}` | Обновить правило |
 | DELETE | `/rule/{id}` | Удалить правило |
-| POST | `/rule/execute/{id}/{userId}` | Выполнить правило для пользователя |
 
 Swagger UI: `http://localhost:8080/swagger-ui.html`
 
