@@ -34,7 +34,8 @@ controller → service → rule (chain of responsibility)
 
 | Метод | Путь | Описание |
 |-------|------|----------|
-| GET | `/recommendation/{userId}` | Получить рекомендации для клиента |
+| GET | `/recommendation/{userId}`        | Получить рекомендации для клиента (динамические правила) |
+| GET | `/recommendation/static/{userId}` | Получить рекомендации для клиента (статические правила)  |
 
 ### Правила (CRUD)
 
