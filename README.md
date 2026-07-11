@@ -42,7 +42,6 @@ controller → service → rule (chain of responsibility)
 | Метод | Путь | Описание |
 |-------|------|----------|
 | GET | `/rule` | Все правила |
-| GET | `/rule/{id}` | Правило по ID |
 | POST | `/rule` | Создать правило |
 | DELETE | `/rule/{id}` | Удалить правило |
 
