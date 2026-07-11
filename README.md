@@ -40,12 +40,12 @@ controller → service → rule (chain of responsibility)
 
 | Метод | Путь | Описание |
 |-------|------|----------|
-| GET | `/rules` | Все правила |
-| GET | `/rules/{id}` | Правило по ID |
-| POST | `/rules` | Создать правило |
-| PUT | `/rules/{id}` | Обновить правило |
-| DELETE | `/rules/{id}` | Удалить правило |
-| POST | `/rules/execute/{id}/{userId}` | Выполнить правило для пользователя |
+| GET | `/rule` | Все правила |
+| GET | `/rule/{id}` | Правило по ID |
+| POST | `/rule` | Создать правило |
+| PUT | `/rule/{id}` | Обновить правило |
+| DELETE | `/rule/{id}` | Удалить правило |
+| POST | `/rule/execute/{id}/{userId}` | Выполнить правило для пользователя |
 
 Swagger UI: `http://localhost:8080/swagger-ui.html`
 
